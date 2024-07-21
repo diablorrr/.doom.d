@@ -94,6 +94,8 @@
   (map! :map projectile-mode-map "C-c p a" #'projectile-add-known-project)
   (map! :map projectile-mode-map "C-c p r" #'projectile-remove-known-project))
 
+(map! "C-M-y" #'org-download-clipboard)
+
 ;;emacs开启时，自动最大化
 (add-to-list 'initial-frame-alist '(fullscreen . maximized))
 
