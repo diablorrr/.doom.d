@@ -80,27 +80,25 @@
 
 
 ;;搜索增强
-(global-set-key (kbd "C-s") 'consult-line)
+(map! "C-s" #'consult-line)
 ;;快速运行代码
-(global-set-key (kbd "<f5>") 'quickrun)
+(map! "<f5>" #'quickrun)
 ;;切换treemacs窗口
-(global-set-key (kbd "C-c w e") 'treemacs-select-window)
+(map! :prefix "C-c"
+      "w e" #'treemacs-select-window)
 ;;增强切换buffer,会显示最近的文件
-(global-set-key (kbd "C-x b") 'switch-to-buffer)
-
+(map! :prefix "C-x"
+      "b" #'switch-to-buffer)
+;;projectile相关设置
+(after! projectile
+  (map! :map projectile-mode-map "C-c p a" #'projectile-add-known-project)
+  (map! :map projectile-mode-map "C-c p r" #'projectile-remove-known-project))
 
 ;;emacs开启时，自动最大化
-(add-to-list 'default-frame-alist '(fullscreen . maximized))
+(add-to-list 'initial-frame-alist '(fullscreen . maximized))
 
 ;;org-roam的数据库，文件改变以保证缓存一致性
 (org-roam-db-autosync-mode)
-;;org-roam控制弹出缓冲区的显示方式
-;;(add-to-list 'display-buffer-alist
-;;             '("\\*org-roam\\*"
-;;               (display-buffer-in-direction)
-;;               (direction . right)
-;;               (window-width . 0.33)
-;;               (window-height . fit-window-to-buffer)))
 
 
 ;;更改dashboard
