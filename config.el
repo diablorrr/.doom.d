@@ -103,5 +103,14 @@
 (org-roam-db-autosync-mode)
 
 
+;;永久显示workspace
+(after! persp-mode
+  (defun display-workspaces-in-minibuffer ()
+    (with-current-buffer " *Minibuf-0*"
+      (erase-buffer)
+      (insert (+workspace--tabline))))
+  (run-with-idle-timer 1 t #'display-workspaces-in-minibuffer)
+  (+workspace/display))
+
 ;;更改dashboard
 ;;(setq fancy-splash-image "~/Downloads/banner.ascii")
