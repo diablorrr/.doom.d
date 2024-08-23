@@ -94,7 +94,12 @@
   (map! :map projectile-mode-map "C-c p a" #'projectile-add-known-project)
   (map! :map projectile-mode-map "C-c p r" #'projectile-remove-known-project))
 
-(map! "C-M-y" #'org-download-clipboard)
+;;avy-goto-char快捷键
+(map! "C-c g c" #'avy-goto-char)
+;;avy-goto-line快捷键
+(map! "C-c g l" #'avy-goto-line)
+
+(map! "C-M-y" #'org-download-crlipboard)
 
 ;;emacs开启时，自动最大化
 (add-to-list 'initial-frame-alist '(fullscreen . maximized))
@@ -102,6 +107,7 @@
 ;;org-roam的数据库，文件改变以保证缓存一致性
 (org-roam-db-autosync-mode)
 
+(setq highlight-indent-guides-method 'fill)
 
 ;;永久显示workspace
 (after! persp-mode
@@ -113,4 +119,16 @@
   (+workspace/display))
 
 ;;更改dashboard
-;;(setq fancy-splash-image "~/Downloads/banner.ascii")
+(defun my-weebery-is-always-greater ()
+  (let* ((banner '("Hello World"                                   ))
+         (longest-line (apply #'max (mapcar #'length banner))))
+    (put-text-property
+     (point)
+     (dolist (line banner (point))
+       (insert (+doom-dashboard--center
+                +doom-dashboard--width
+                (concat line (make-string (max 0 (- longest-line (length line))) 32)))
+               "\n"))
+     'face 'doom-dashboard-banner)))
+
+(setq +doom-dashboard-ascii-banner-fn #'my-weebery-is-always-greater)
