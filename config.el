@@ -107,6 +107,7 @@
 ;;org-roam的数据库，文件改变以保证缓存一致性
 (org-roam-db-autosync-mode)
 
+;;设置缩进辅助线
 (setq highlight-indent-guides-method 'fill)
 
 ;;永久显示workspace
@@ -132,3 +133,15 @@
      'face 'doom-dashboard-banner)))
 
 (setq +doom-dashboard-ascii-banner-fn #'my-weebery-is-always-greater)
+
+;;光标设置
+(use-package! holo-layer
+  :config
+  (setq holo-layer-enable-cursor-animation t
+        holo-layer-enable-place-info t
+        holo-layer-cursor-alpha 100
+        holo-layer-cursor-animation-interval 10
+        holo-layer-cursor-animation-duration 200
+        holo-layer-cursor-animation-type "jelly easing"
+        holo-layer-python-command "/usr/bin/python")
+  (holo-layer-enable))
