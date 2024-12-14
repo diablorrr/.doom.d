@@ -49,6 +49,5 @@
 ;; ...Or *all* packages (NOT RECOMMENDED; will likely break things)
 ;; (unpin! t)
 
-;; (package! holo-layer :recipe (:host github
-;;                               :repo "manateelazycat/holo-layer"
-;;                               :files ("*")))
+(package! imenu-list)
+(package! transpose-frame)

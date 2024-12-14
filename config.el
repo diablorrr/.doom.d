@@ -23,6 +23,9 @@
 ;;
 ;;(setq doom-font (font-spec :family "Fira Code" :size 12 :weight 'semi-light)
 ;;      doom-variable-pitch-font (font-spec :family "Fira Sans" :size 13))
+(setq doom-font (font-spec :family "Sarasa Term SC Nerd" :size 24 :weight 'regular)
+      doom-variable-pitch-font (font-spec :family "Sarasa Term SC Nerd" :size 26))
+
 ;;
 ;; If you or Emacs can't find your font, use 'M-x describe-font' to look them
 ;; up, `M-x eval-region' to execute elisp code, and 'M-x doom/reload-font' to
@@ -46,10 +49,32 @@
 ;; 设置org文件的默认目录
 (setq org-directory "~/.org/")
 ;;打开org的目录
-(map! "C-c f o"
-      #'(lambda ()
-          (interactive)
-          (find-file (read-file-name "Open file or directory: " "/home/yoshiki01/.org/"))))
+(defun open-org-dir ()
+        (interactive)
+        (find-file (read-file-name "Open file or directory: " "/home/yoshiki01/.org/")))
+(map! "C-c f o" #'open-org-dir)
+;;org-roam的数据库，文件改变以保证缓存一致性
+;;(org-roam-db-autosync-mode)
+;;+org/refile-to-file
+(map! :after org
+      "C-c C-w" #'+org/refile-to-file)
+
+;;debug时用的
+;; (add-variable-watcher 'org-agenda-files
+;;                       (lambda (_sym newval operation where)
+;;                         (message "org-agenda-files changed: %s (Operation: %s)" newval operation)
+;;                         (debug))) ; 捕获调用堆栈
+
+;;org-agenda捕获TODO文件
+;; (after! org
+;;   (setq! org-agenda-files (directory-files-recursively "/home/yoshiki01/.org" "\\.org$")))
+
+(after! org
+  (setq! org-agenda-files
+         (cl-remove-if
+          (lambda (file) (string-match-p "/\\.org/roam/" file))  ; 排除包含 /.org/.roam/ 的文件
+          (directory-files-recursively "/home/yoshiki01/.org" "\\.org$"))))
+
 
 
 ;; Whenever you reconfigure a package, make sure to wrap your config in an
@@ -85,36 +110,11 @@
 ;; they are implemented.
 
 
-;;搜索增强
-(map! "C-s" #'consult-line)
-;;快速运行代码
-(map! "<f5>" #'quickrun)
-;;切换treemacs窗口
-(map! :prefix "C-c"
-      "w e" #'treemacs-select-window)
-;;增强切换buffer,会显示最近的文件
-(map! :prefix "C-x"
-      "b" #'switch-to-buffer)
-;;projectile相关设置
-(after! projectile
-  (map! :map projectile-mode-map "C-c p a" #'projectile-add-known-project)
-  (map! :map projectile-mode-map "C-c p r" #'projectile-remove-known-project))
 
-;;avy-goto-char快捷键
-(map! "C-c g c" #'avy-goto-char)
-;;avy-goto-line快捷键
-(map! "C-c g l" #'avy-goto-line)
-
-(map! "C-M-y" #'org-download-crlipboard)
 
 ;;emacs开启时，自动最大化
 (add-to-list 'initial-frame-alist '(fullscreen . maximized))
 
-;;org-roam的数据库，文件改变以保证缓存一致性
-(org-roam-db-autosync-mode)
-
-;;设置缩进辅助线
-;;(setq highlight-indent-guides-method 'fill)
 
 ;;永久显示workspace
 (after! persp-mode
@@ -137,23 +137,106 @@
                 (concat line (make-string (max 0 (- longest-line (length line))) 32)))
                "\n"))
      'face 'doom-dashboard-banner)))
-
 (setq +doom-dashboard-ascii-banner-fn #'my-weebery-is-always-greater)
 
-;;光标设置
-;; (use-package! holo-layer
-;;   :config
-;;   (setq holo-layer-enable-cursor-animation t
-;;         holo-layer-enable-place-info t
-;;         holo-layer-cursor-alpha 100
-;;         holo-layer-cursor-animation-interval 10
-;;         holo-layer-cursor-animation-duration 200
-;;         holo-layer-cursor-animation-type "jelly easing"
-;;         holo-layer-python-command "/usr/bin/python")
-;;   (holo-layer-enable))
+;;修改doom-dashboard的footer
+(defun doom-dashboard-widget-footer ()
+  (insert
+   "\n"
+   (+doom-dashboard--center
+    (- +doom-dashboard--width 2)
+    (with-temp-buffer
+      (insert-text-button
+       (propertize "yoshiki" 'face 'doom-dashboard-footer)
+       'action (lambda (_) (browse-url "https://example.com"))
+       'follow-link t
+       'help-echo "Open custom page")
+      (buffer-string)))
+   "\n"))
 
-;;rss配置
-(setq! rmh-elfeed-org-files '("~/.doom.d/elfeed.org"))
-(setq! elfeed-db-directory "/home/yoshiki01/.elfeed/db/")
-(after! elfeed
-  (setq! elfeed-search-filter "@4-year-ago"))
+
+;;搜索增强
+(map! "C-s" #'consult-line)
+;;快速运行代码
+(map! "<f5>" #'quickrun)
+;;切换treemacs窗口
+(map! :prefix "C-c"
+      "w e" #'treemacs-select-window)
+;;增强切换buffer,会显示最近的文件
+(map! :prefix "C-x"
+      "b" #'switch-to-buffer)
+;;projectile相关设置
+(after! projectile
+  (map! :map projectile-mode-map "C-c p a" #'projectile-add-known-project)
+  (map! :map projectile-mode-map "C-c p r" #'projectile-remove-known-project))
+
+;;粘贴图片
+(map! "C-M-y" #'org-download-crlipboard)
+
+
+
+;;打开项目
+(defun open-proj ()
+  (interactive)
+  (find-file (read-file-name "open proj: " "/home/yoshiki01/.proj/")))
+(map! "C-c f j" #'open-proj)
+
+;;解绑快捷键
+;;(map! :map general-override-mode-map "C-c f p" nil)
+
+;;字体放大缩小
+(map! :map global-map
+      "C-=" #'doom/increase-font-size
+      "C--" #'doom/decrease-font-size)
+;;窗口调整
+(map! "M-]" #'doom/window-enlargen
+      "M-[" #'balance-windows)
+
+
+;;avy-goto-word-0快捷键
+(map! :map global-map
+      "C-r" #'avy-goto-word-0)
+;;avy-goto-line快捷键
+(map! "C-x j" #'avy-goto-line)
+
+;;dired改键
+(map! :after dired
+      :map dired-mode-map
+      "b" #'dired-up-directory)
+
+;;imenu-list配置
+(map! "C-c o i" #'imenu-list)
+(setq! imenu-list-auto-resize t)
+
+;;imenu-list快捷键设置
+(defvar my-toggle-state t)
+(defun my-toggle-show-hide ()
+  "Toggle between `hs-show-all` and `hs-hide-all` functions."
+  (interactive)
+  (if (not (fboundp 'hs-show-all))
+      (message "The `hs-show-all` function is not defined.")
+    (if (not (fboundp 'hs-hide-all))
+        (message "The `hs-hide-all` function is not defined.")
+      (if my-toggle-state
+          (progn
+            (setq my-toggle-state nil)
+            (message "Hiding...")
+            (funcall #'hs-hide-all))
+        (progn
+          (setq my-toggle-state t)
+          (message "Showing...")
+          (funcall #'hs-show-all))))))
+(map! :after imenu-list
+      :map imenu-list-major-mode-map
+      "u" #'my-toggle-show-hide)
+
+(map! :map c-mode-base-map "C-o" #'lsp-ui-doc-toggle)
+(after! lsp-ui
+  (setq lsp-ui-doc-max-width 200
+        lsp-ui-doc-max-height 100
+        lsp-ui-doc-position 'top))
+(custom-set-faces
+ '(lsp-ui-doc ((t (:height 1.0 :family "Courier New"))))) ;; 设置字体和大小
+
+
+;;TODO：删除未使用的图片
