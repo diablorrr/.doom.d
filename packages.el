@@ -49,5 +49,7 @@
 ;; ...Or *all* packages (NOT RECOMMENDED; will likely break things)
 ;; (unpin! t)
 
+;;大纲
 (package! imenu-list)
+;;调整buffer位置，如上下调整为左右
 (package! transpose-frame)

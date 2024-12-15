@@ -65,16 +65,6 @@
 ;;                         (message "org-agenda-files changed: %s (Operation: %s)" newval operation)
 ;;                         (debug))) ; 捕获调用堆栈
 
-;;org-agenda捕获TODO文件
-;; (after! org
-;;   (setq! org-agenda-files (directory-files-recursively "/home/yoshiki01/.org" "\\.org$")))
-
-(after! org
-  (setq! org-agenda-files
-         (cl-remove-if
-          (lambda (file) (string-match-p "/\\.org/roam/" file))  ; 排除包含 /.org/.roam/ 的文件
-          (directory-files-recursively "/home/yoshiki01/.org" "\\.org$"))))
-
 
 
 ;; Whenever you reconfigure a package, make sure to wrap your config in an
@@ -112,7 +102,7 @@
 
 
 
-;;emacs开启时，自动最大化
+;;emacs开启时，自动最大化，开启自动换行
 (add-to-list 'initial-frame-alist '(fullscreen . maximized))
 
 
