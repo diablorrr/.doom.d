@@ -54,7 +54,7 @@
         (find-file (read-file-name "Open file or directory: " "/home/yoshiki01/.org/")))
 (map! "C-c f o" #'open-org-dir)
 ;;org-roam的数据库，文件改变以保证缓存一致性
-;;(org-roam-db-autosync-mode)
+(org-roam-db-autosync-mode)
 ;;+org/refile-to-file
 (map! :after org
       "C-c C-w" #'+org/refile-to-file)
@@ -78,7 +78,7 @@
 ;;   - Setting file/directory variables (like `org-directory')
 ;;   - Setting variables which explicitly tell you to set them before their
 ;;     package is loaded (see 'C-h v VARIABLE' to look up their documentation).
-;;   - Setting doom variables (which start with 'doom-' or '+').
+;;   - Setting doom variables (which start with 'doom-' or '+'). 设置doom变量
 ;;
 ;; Here are some additional functions/macros that will help you configure Doom.
 ;;
@@ -89,7 +89,12 @@
 ;;   this file. Emacs searches the `load-path' when you load packages with
 ;;   `require' or `use-package'.
 ;; - `map!' for binding new keys
-;;
+
+;;加载ox-freemind
+(after! org
+ (require 'ox-freemind))
+
+
 ;; To get information about any of these functions/macros, move the cursor over
 ;; the highlighted symbol at press 'K' (non-evil users must press 'C-c c k').
 ;; This will open documentation for it, including demos of how they are used.
@@ -200,7 +205,7 @@
 
 ;;imenu-list快捷键设置
 (defvar my-toggle-state t)
-(defun my-toggle-show-hide ()
+(defun yoshiki/my-toggle-show-hide ()
   "Toggle between `hs-show-all` and `hs-hide-all` functions."
   (interactive)
   (if (not (fboundp 'hs-show-all))
@@ -218,7 +223,7 @@
           (funcall #'hs-show-all))))))
 (map! :after imenu-list
       :map imenu-list-major-mode-map
-      "u" #'my-toggle-show-hide)
+      "u" #'yoshiki/my-toggle-show-hide)
 
 (map! :map c-mode-base-map "C-o" #'lsp-ui-doc-toggle)
 (after! lsp-ui
@@ -228,5 +233,29 @@
 (custom-set-faces
  '(lsp-ui-doc ((t (:height 1.0 :family "Courier New"))))) ;; 设置字体和大小
 
+
+;;org noter的笔记buffer中滚动pdf的buffer
+(defun yoshiki/scroll-other-window ()
+  (interactive)
+  (let* ((wind (other-window-for-scrolling))
+         (mode (with-selected-window wind major-mode)))
+    (if (eq mode 'pdf-view-mode)
+        (with-selected-window wind
+          (pdf-view-next-line-or-next-page 2))
+      (scroll-other-window 2))))
+(defun yoshiki/scroll-other-window-down ()
+  (interactive)
+  (let* ((wind (other-window-for-scrolling))
+         (mode (with-selected-window wind major-mode)))
+    (if (eq mode 'pdf-view-mode)
+        (with-selected-window wind
+          (progn
+            (pdf-view-previous-line-or-previous-page 2)
+            (other-window 1)))
+      (scroll-other-window-down 2))))
+(map! :after org-noter
+      :map org-mode-map
+      "C-M-v" #'yoshiki/scroll-other-window
+      "C-M-S-v" #'yoshiki/scroll-other-window-down)
 
 ;;TODO：删除未使用的图片

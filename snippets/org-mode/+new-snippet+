@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: org-noter-page-info
+# key: onpi
+# --
+:PROPERTIES:
+:NOTER_PAGE: ${1:type}
+:END:
