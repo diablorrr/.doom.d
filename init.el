@@ -154,7 +154,7 @@
        ;;nim               ; python + lisp at the speed of c
        ;;nix               ; I hereby declare "nix geht mehr!"
        ;;ocaml             ; an objective camel
-       (org +brain +dragndrop +noter +pandoc +pomodoro +roam2)               ; roam2:用于写双链笔记；dragndrop:org-download用于粘贴图片
+       (org +dragndrop +noter +pandoc +pomodoro +roam2)               ; roam2:用于写双链笔记；dragndrop:org-download用于粘贴图片
        ;;php               ; perl's insecure younger brother
        ;;plantuml          ; diagrams for confusing people more
        ;;purescript        ; javascript, but functional

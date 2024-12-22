@@ -48,16 +48,53 @@
 
 ;; 设置org文件的默认目录
 (setq org-directory "~/.org/")
+
 ;;打开org的目录
 (defun open-org-dir ()
         (interactive)
         (find-file (read-file-name "Open file or directory: " "/home/yoshiki01/.org/")))
 (map! "C-c f o" #'open-org-dir)
+
 ;;org-roam的数据库，文件改变以保证缓存一致性
 (org-roam-db-autosync-mode)
+
 ;;+org/refile-to-file
 (map! :after org
-      "C-c C-w" #'+org/refile-to-file)
+      "C-c M-w" #'+org/refile-to-file
+      "C-c C-w" #'org-refile
+      "C-c C-r" #'org-roam-refile)
+
+;;粘贴图片
+(map! :after org-download
+      "C-M-y" #'org-download-crlipboard)
+
+;;org noter的笔记buffer中滚动pdf的buffer
+(defun yoshiki/scroll-other-window ()
+  (interactive)
+  (let* ((wind (other-window-for-scrolling))
+         (mode (with-selected-window wind major-mode)))
+    (if (eq mode 'pdf-view-mode)
+        (with-selected-window wind
+          (pdf-view-next-line-or-next-page 2))
+      (scroll-other-window 2))))
+(defun yoshiki/scroll-other-window-down ()
+  (interactive)
+  (let* ((wind (other-window-for-scrolling))
+         (mode (with-selected-window wind major-mode)))
+    (if (eq mode 'pdf-view-mode)
+        (with-selected-window wind
+          (progn
+            (pdf-view-previous-line-or-previous-page 2)
+            (other-window 1)))
+      (scroll-other-window-down 2))))
+(map! :after org-noter
+      :map org-mode-map
+      "C-M-v" #'yoshiki/scroll-other-window
+      "C-M-S-v" #'yoshiki/scroll-other-window-down)
+
+;;加载ox-freemind
+(after! org
+ (require 'ox-freemind))
 
 ;;debug时用的
 ;; (add-variable-watcher 'org-agenda-files
@@ -90,9 +127,7 @@
 ;;   `require' or `use-package'.
 ;; - `map!' for binding new keys
 
-;;加载ox-freemind
-(after! org
- (require 'ox-freemind))
+
 
 
 ;; To get information about any of these functions/macros, move the cursor over
@@ -165,8 +200,7 @@
   (map! :map projectile-mode-map "C-c p a" #'projectile-add-known-project)
   (map! :map projectile-mode-map "C-c p r" #'projectile-remove-known-project))
 
-;;粘贴图片
-(map! "C-M-y" #'org-download-crlipboard)
+
 
 
 
@@ -234,28 +268,17 @@
  '(lsp-ui-doc ((t (:height 1.0 :family "Courier New"))))) ;; 设置字体和大小
 
 
-;;org noter的笔记buffer中滚动pdf的buffer
-(defun yoshiki/scroll-other-window ()
-  (interactive)
-  (let* ((wind (other-window-for-scrolling))
-         (mode (with-selected-window wind major-mode)))
-    (if (eq mode 'pdf-view-mode)
-        (with-selected-window wind
-          (pdf-view-next-line-or-next-page 2))
-      (scroll-other-window 2))))
-(defun yoshiki/scroll-other-window-down ()
-  (interactive)
-  (let* ((wind (other-window-for-scrolling))
-         (mode (with-selected-window wind major-mode)))
-    (if (eq mode 'pdf-view-mode)
-        (with-selected-window wind
-          (progn
-            (pdf-view-previous-line-or-previous-page 2)
-            (other-window 1)))
-      (scroll-other-window-down 2))))
-(map! :after org-noter
-      :map org-mode-map
-      "C-M-v" #'yoshiki/scroll-other-window
-      "C-M-S-v" #'yoshiki/scroll-other-window-down)
 
-;;TODO：删除未使用的图片
+;; (defun my/org-download-method-watcher (symbol newval operation where)
+;;   "Monitor changes to `org-download-method` and log them in the *Messages* buffer."
+;;   (if (eq newval 'attach)
+;;       (progn (message "org-download-method is now 'attach'.")
+;;              (debug))
+;;     (message "org-download-method changed to: %s (operation: %s)" newval operation)))
+
+;; (add-variable-watcher 'org-download-method #'my/org-download-method-watcher)
+
+
+;; (after! org-download
+;;   (setq! org-download-method #'directory))
+

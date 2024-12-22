@@ -9,7 +9,31 @@
  '(elfeed-feeds '("https://emacs.liujiacai.net/podcast/index.xml"))
  '(lsp-ui-doc-show-with-mouse t)
  '(org-agenda-files
-   '("~/.org/roam/20241220112523-设计模式.org" "/home/yoshiki01/.org/DoomEmacs使用手册.org" "/home/yoshiki01/.org/todo.org" "/home/yoshiki01/.org/设计模式使用手册.org" "/home/yoshiki01/.org/English使用手册.org"))
+   '("/home/yoshiki01/.org/daily.org" "/home/yoshiki01/.org/todo.org"))
+ '(org-capture-templates
+   '(("t" "Personal todo" entry
+      (file+headline +org-capture-todo-file "Inbox")
+      "* TODO [#B] %?" :prepend t)
+     ("n" "Personal notes" entry
+      (file+headline +org-capture-notes-file "Inbox")
+      "* %u %?\12%i\12%a" :prepend t)
+     ("j" "Journal" entry
+      (file+olp+datetree +org-capture-journal-file)
+      "* %U %?\12%i\12%a" :prepend t)
+     ("p" "Templates for projects")
+     ("pt" "Project-local todo" entry
+      (file+headline +org-capture-project-todo-file "Inbox")
+      "* TODO %?\12%i\12%a" :prepend t)
+     ("pn" "Project-local notes" entry
+      (file+headline +org-capture-project-notes-file "Inbox")
+      "* %U %?\12%i\12%a" :prepend t)
+     ("pc" "Project-local changelog" entry
+      (file+headline +org-capture-project-changelog-file "Unreleased")
+      "* %U %?\12%i\12%a" :prepend t)
+     ("o" "Centralized templates for projects")
+     ("ot" "Project todo" entry #'+org-capture-central-project-todo-file "* TODO %?\12 %i\12 %a" :heading "Tasks" :prepend nil)
+     ("on" "Project notes" entry #'+org-capture-central-project-notes-file "* %U %?\12 %i\12 %a" :prepend t :heading "Notes")
+     ("oc" "Project changelog" entry #'+org-capture-central-project-changelog-file "* %U %?\12 %i\12 %a" :prepend t :heading "Changelog")))
  '(org-download-abbreviate-filename-function
    '(closure
         (t)
@@ -19,13 +43,15 @@
           (file-relative-name path org-download-image-dir)
         path)))
  '(org-download-heading-lvl nil)
- '(org-download-method 'directory)
+ '(org-download-method 'attach)
  '(org-download-screenshot-method nil)
  '(org-download-timestamp "_%Y%m%d_%H%M%S")
- '(org-export-headline-levels 6)
+ '(org-export-headline-levels 16)
  '(org-freemind-section-format 'note)
  '(org-goto-auto-isearch nil)
  '(org-hide-emphasis-markers t)
+ '(org-pomodoro-audio-player "/usr/bin/paplay")
+ '(org-pomodoro-keep-killed-pomodoro-time t)
  '(package-selected-packages '(winum))
  '(which-key-use-C-h-commands t))
 (custom-set-faces
