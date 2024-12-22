@@ -281,4 +281,3 @@
 
 ;; (after! org-download
 ;;   (setq! org-download-method #'directory))
-
