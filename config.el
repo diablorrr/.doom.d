@@ -66,7 +66,7 @@
 
 ;;粘贴图片
 (map! :after org-download
-      "C-M-y" #'org-download-crlipboard)
+      "C-M-y" #'org-download-clipboard)
 
 ;;org noter的笔记buffer中滚动pdf的buffer
 (defun yoshiki/scroll-other-window ()
@@ -281,3 +281,10 @@
 
 ;; (after! org-download
 ;;   (setq! org-download-method #'directory))
+
+;;当子任务全部DONE时，父任务自动转变为DONE
+(defun org-summary-todo (n-done n-not-done)
+  "Switch entry to DONE when all subentries are done, to TODO otherwise."
+  (let (org-log-done org-todo-log-states)
+    (org-todo (if (= n-not-done 0) "DONE" "TODO"))))
+(add-hook 'org-after-todo-statistics-hook #'org-summary-todo)

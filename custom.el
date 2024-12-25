@@ -13,9 +13,13 @@
  '(org-agenda-files
    '("~/.org/someday.org" "/home/yoshiki01/.org/inbox.org" "/home/yoshiki01/.org/agenda.org"))
  '(org-capture-templates
-   '(("t" "Personal todo" entry
+   '(("t" "Personal todo")
+     ("tl" "todo with link" entry
       (file+headline "~/.org/inbox.org" "Inbox")
-      "* TODO [#B] %? %U\12%i\12%a" :prepend t)
+      "* TODO [#B] %?\12%i\12%a" :prepend t)
+     ("tt" "todo without link" entry
+      (file+headline "~/.org/inbox.org" "Inbox")
+      "* TODO [#B] %?" :prepend t)
      ("n" "Personal notes" entry
       (file+headline +org-capture-notes-file "Inbox")
       "* %u %?\12%i\12%a" :prepend t)
@@ -54,11 +58,29 @@
  '(org-goto-auto-isearch nil)
  '(org-hide-emphasis-markers t)
  '(org-pomodoro-audio-player "/usr/bin/paplay")
+ '(org-pomodoro-finished-sound
+   "/home/yoshiki01/.emacs.d/.local/straight/build-29.4/org-pomodoro/resources/startPomo.wav")
  '(org-pomodoro-keep-killed-pomodoro-time t)
+ '(org-pomodoro-killed-sound nil)
+ '(org-pomodoro-killed-sound-p nil)
+ '(org-pomodoro-length 45)
+ '(org-pomodoro-long-break-sound
+   "/home/yoshiki01/.emacs.d/.local/straight/build-29.4/org-pomodoro/resources/startPomo.wav")
+ '(org-pomodoro-overtime-sound
+   "/home/yoshiki01/.emacs.d/.local/straight/build-29.4/org-pomodoro/resources/startPomo.wav")
+ '(org-pomodoro-short-break-sound
+   "/home/yoshiki01/.emacs.d/.local/straight/build-29.4/org-pomodoro/resources/startPomo.wav")
+ '(org-pomodoro-start-sound
+   "/home/yoshiki01/.emacs.d/.local/straight/build-29.4/org-pomodoro/resources/startPomo.wav")
+ '(org-pomodoro-start-sound-p t)
+ '(org-pomodoro-ticking-sound
+   "/home/yoshiki01/.emacs.d/.local/straight/build-29.4/org-pomodoro/resources/tick.wav")
+ '(org-pomodoro-ticking-sound-p nil)
  '(org-refile-targets
-   '(("~/.org/archive.org" :maxlevel . 4)
+   '(("~/.org/trash.org" :tag . "")
+     ("~/.org/done.org" :level . 3)
      (nil :maxlevel . 3)
-     (org-agenda-files :maxlevel . 3)))
+     (org-agenda-files :level . 1)))
  '(org-refile-use-outline-path 'file)
  '(package-selected-packages '(winum))
  '(which-key-use-C-h-commands t))
@@ -68,6 +90,10 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(default ((t (:inherit nil :extend nil :stipple nil :background "#EDEDED" :foreground "#2E3436" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight regular :height 126 :width normal :foundry "ADBO" :family "Source Code Pro"))))
+ '(+org-todo-active ((t (:foreground "lime green"))))
+ '(+org-todo-cancel ((t (:foreground "black"))))
+ '(+org-todo-onhold ((t (:foreground "dark orange"))))
+ '(+org-todo-project ((t (:foreground "deep sky blue"))))
  '(bold ((t (:foreground "black" :weight bold))))
  '(cursor ((t (:background "black"))))
  '(doom-modeline-buffer-file ((t (:foreground "gold" :weight bold))))
@@ -79,7 +105,11 @@
  '(lsp-ui-doc-background ((t (:background "white"))))
  '(magit-section-highlight ((t (:extend t :background "dark orange"))))
  '(mode-line ((t (:background "black" :foreground "white" :box (:line-width (1 . -1) :style released-button)))))
+ '(org-agenda-dimmed-todo-face ((t (:foreground "orange red"))))
+ '(org-agenda-done ((t (:foreground "RosyBrown" :weight bold))))
+ '(org-done ((t (:foreground "RosyBrown" :weight bold))))
  '(org-inline-src-block ((t (:inherit org-block))))
  '(org-list-dt ((t (:foreground "orange red" :weight bold))))
  '(org-table ((t (:foreground "Blue1"))))
+ '(org-todo ((t (:foreground "deep pink" :weight bold))))
  '(shadow ((t (:foreground "gray30")))))
