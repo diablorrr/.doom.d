@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: yoshiki/arrow
+# key: -
+# --
+=> $0

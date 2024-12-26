@@ -38,7 +38,7 @@
 ;;(setq doom-theme 'doom-one)
 ;;启动主题设置
 (setq doom-theme 'adwaita)
-
+;;(setq doom-theme 'doom-one)
 ;; This determines the style of line numbers in effect. If set to `nil', line
 ;; numbers are disabled. For relative line numbers, set this to `relative'.
 (setq display-line-numbers-type t)
@@ -268,23 +268,23 @@
  '(lsp-ui-doc ((t (:height 1.0 :family "Courier New"))))) ;; 设置字体和大小
 
 
-
-;; (defun my/org-download-method-watcher (symbol newval operation where)
-;;   "Monitor changes to `org-download-method` and log them in the *Messages* buffer."
-;;   (if (eq newval 'attach)
-;;       (progn (message "org-download-method is now 'attach'.")
-;;              (debug))
-;;     (message "org-download-method changed to: %s (operation: %s)" newval operation)))
-
-;; (add-variable-watcher 'org-download-method #'my/org-download-method-watcher)
-
-
-;; (after! org-download
-;;   (setq! org-download-method #'directory))
-
 ;;当子任务全部DONE时，父任务自动转变为DONE
 (defun org-summary-todo (n-done n-not-done)
   "Switch entry to DONE when all subentries are done, to TODO otherwise."
   (let (org-log-done org-todo-log-states)
     (org-todo (if (= n-not-done 0) "DONE" "TODO"))))
 (add-hook 'org-after-todo-statistics-hook #'org-summary-todo)
+
+;;当TODO状态变成STRT时，如果不存在计时器，则开始计时
+(defun yoshiki/org-clock-in-when-strt ()
+  (when (string= (org-get-todo-state) "STRT")
+    (when (not (org-clock-is-active))
+      (org-clock-in))))
+(add-hook 'org-after-todo-state-change-hook #'yoshiki/org-clock-in-when-strt)
+
+;;当其他状态转变为TODO时，检查是否存在计时器，存在就关闭
+(defun yoshiki/org-clock-out-when-todo ()
+  (when (string= (org-get-todo-state) "TODO")
+    (when (org-clock-is-active)
+      (org-clock-out))))
+(add-hook 'org-after-todo-state-change-hook #'yoshiki/org-clock-out-when-todo)
