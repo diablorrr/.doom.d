@@ -37,8 +37,8 @@
 ;; `load-theme' function. This is the default:
 ;;(setq doom-theme 'doom-one)
 ;;启动主题设置
-(setq doom-theme 'adwaita)
-;;(setq doom-theme 'doom-one)
+;;(setq doom-theme 'adwaita)
+(setq doom-theme 'doom-one)
 ;; This determines the style of line numbers in effect. If set to `nil', line
 ;; numbers are disabled. For relative line numbers, set this to `relative'.
 (setq display-line-numbers-type t)
