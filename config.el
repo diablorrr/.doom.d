@@ -260,12 +260,12 @@
       "u" #'yoshiki/my-toggle-show-hide)
 
 (map! :map c-mode-base-map "C-o" #'lsp-ui-doc-toggle)
-(after! lsp-ui
-  (setq lsp-ui-doc-max-width 200
-        lsp-ui-doc-max-height 100
-        lsp-ui-doc-position 'top))
-(custom-set-faces
- '(lsp-ui-doc ((t (:height 1.0 :family "Courier New"))))) ;; 设置字体和大小
+;; (after! lsp-ui
+;;   (setq lsp-ui-doc-max-width 200
+;;         lsp-ui-doc-max-height 100
+;;         lsp-ui-doc-position 'top))
+;; (custom-set-faces
+;;  '(lsp-ui-doc ((t (:height 1.0 :family "Courier New"))))) ;; 设置字体和大小
 
 
 ;;当子任务全部DONE时，父任务自动转变为DONE
