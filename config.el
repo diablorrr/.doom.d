@@ -58,11 +58,12 @@
 ;;org-roam的数据库，文件改变以保证缓存一致性
 (org-roam-db-autosync-mode)
 
-;;+org/refile-to-file
+;;org快捷键
 (map! :after org
       "C-c M-w" #'+org/refile-to-file
       "C-c C-w" #'org-refile
-      "C-c C-r" #'org-roam-refile)
+      "C-c C-r" #'org-roam-refile
+      "C-c i p" #'yoshiki/org-insert-artist-drawing)
 
 ;;粘贴图片
 (map! :after org-download
@@ -288,3 +289,57 @@
     (when (org-clock-is-active)
       (org-clock-out))))
 (add-hook 'org-after-todo-state-change-hook #'yoshiki/org-clock-out-when-todo)
+
+
+(after! org
+  (setq! tab-width 8))
+
+(add-hook 'c++-mode-hook
+          (lambda ()
+            (setq c-basic-offset 4)))
+
+
+;;artist改键：解绑artist-mode-off
+(map! :after artist
+      :map artist-mode-map
+      "C-c C-c" nil
+      "C-c C-'" #'artist-mode-off)
+
+;;org-mode中插入artist绘画
+(defun yoshiki/org-insert-artist-drawing ()
+  "Create a new buffer for drawing in artist-mode. Insert the drawing into the current Org line upon completion."
+  (interactive)
+  (unless (derived-mode-p 'org-mode)
+    (error "This function can only be used in Org Mode"))
+  (let ((artist-buffer (generate-new-buffer "*Artist Drawing*"))
+        (current-buffer (current-buffer))
+        (line-marker (point-marker))) ; Record the current line position
+    ;; Display the artist buffer in a window at the bottom and switch to it
+    (display-buffer artist-buffer '((display-buffer-below-selected)
+                                    (window-height . 0.3))) ; Adjust height as needed
+    (select-window (get-buffer-window artist-buffer)) ; Move cursor to the new buffer
+    (with-current-buffer artist-buffer
+      ;; Enable artist-mode
+      (artist-mode)
+      ;; Set up the keybinding for exiting, inserting into Org, and closing buffer
+      (local-set-key (kbd "C-c C-c")
+                     (lambda ()
+                       (interactive)
+                       (let ((drawing (buffer-string))) ; Get drawing content
+                         ;; Return to the original Org buffer
+                         (switch-to-buffer current-buffer)
+                         ;; Insert into the specified line
+                         (goto-char (marker-position line-marker))
+                         (insert drawing)
+                         ;; Delete the temporary buffer and close its window
+                         (kill-buffer artist-buffer)
+                         (delete-window (get-buffer-window artist-buffer)))))
+      ;; Set up the keybinding for cancelling (C-c C-k)
+      (local-set-key (kbd "C-c C-k")
+                     (lambda ()
+                       (interactive)
+                       ;; Return to the original Org buffer without inserting anything
+                       (switch-to-buffer current-buffer)
+                       ;; Delete the temporary buffer and close its window
+                       (kill-buffer artist-buffer)
+                       (delete-window (get-buffer-window artist-buffer)))))))
