@@ -63,7 +63,7 @@
       "C-c M-w" #'+org/refile-to-file
       "C-c C-w" #'org-refile
       "C-c C-r" #'org-roam-refile
-      "C-c i p" #'yoshiki/org-insert-artist-drawing)
+      "C-c i i" #'yoshiki/org-insert-artist-drawing)
 
 ;;粘贴图片
 (map! :after org-download
@@ -299,11 +299,21 @@
             (setq c-basic-offset 4)))
 
 
-;;artist改键：解绑artist-mode-off
+;;artist改键
 (map! :after artist
       :map artist-mode-map
       "C-c C-c" nil
-      "C-c C-'" #'artist-mode-off)
+      "C-c C-'" #'artist-mode-off
+      "C-r" #'artist-select-op-square
+      "C-s" #'artist-select-op-line
+      "C-w" #'artist-select-op-cut-square
+      "C-y" #'artist-select-op-paste
+      "M-w" #'artist-select-op-copy-rectangle
+      "C-b" #'picture-backward-column
+      "<left>" #'picture-backward-column
+      "C-t" #'artist-toggle-second-arrow)
+
+
 
 ;;org-mode中插入artist绘画
 (defun yoshiki/org-insert-artist-drawing ()
@@ -343,3 +353,30 @@
                        ;; Delete the temporary buffer and close its window
                        (kill-buffer artist-buffer)
                        (delete-window (get-buffer-window artist-buffer)))))))
+
+;;滑动优化
+;; (map! "C-v" #'pixel-scroll-up)
+;; (map! "M-v" #'pixel-scroll-down)
+
+
+;;保存org文件时，自动更新修改时间
+(defun yoshiki/org-update-last-modified ()
+  "Update the LAST_MODIFIED property in the Org file."
+  (when (derived-mode-p 'org-mode)
+    (save-excursion
+      (goto-char (point-min))
+      (if (re-search-forward "^#\\+LAST_MODIFIED:.*$" nil t)
+          (replace-match (concat "#+LAST_MODIFIED: " (format-time-string "%Y-%m-%d %H:%M:%S")))
+        (goto-char (point-min))
+        (if (re-search-forward "^#\\+TITLE:.*$" nil t)
+            (progn
+              (end-of-line)
+              (insert (concat "\n#+LAST_MODIFIED: " (format-time-string "%Y-%m-%d %H:%M:%S") "\n")))
+          (insert (concat "#+TITLE: Untitled\n#+LAST_MODIFIED: " (format-time-string "%Y-%m-%d %H:%M:%S") "\n")))))))
+
+(add-hook 'before-save-hook 'yoshiki/org-update-last-modified)
+
+;;设置pdf-tools高亮快捷键
+(map! :after pdf-tools
+      :map pdf-annot-minor-mode-map
+      "C-SPC" #'pdf-annot-add-highlight-markup-annotation)

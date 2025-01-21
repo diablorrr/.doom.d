@@ -82,8 +82,7 @@
    "/home/yoshiki01/.emacs.d/.local/straight/build-29.4/org-pomodoro/resources/tick.wav")
  '(org-pomodoro-ticking-sound-p nil)
  '(org-refile-targets
-   '(("~/.org/trash.org" :tag . "")
-     ("~/.org/done.org" :level . 3)
+   '(("~/.org/done.org" :level . 3)
      (nil :maxlevel . 3)
      (org-agenda-files :level . 1)))
  '(org-refile-use-outline-path 'file)
