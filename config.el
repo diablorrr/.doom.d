@@ -380,3 +380,10 @@
 (map! :after pdf-tools
       :map pdf-annot-minor-mode-map
       "C-SPC" #'pdf-annot-add-highlight-markup-annotation)
+
+;;设置进入.h文件，自动进入cpp-mode
+(after! cc-mode
+  (add-to-list 'auto-mode-alist '("\\.h\\'" . cpp-mode)))
+
+(map! "<drag-mouse-8>" #'better-jumper-jump-backward)
+(map! "C-t" #'transpose-frame)
