@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: date year month week
+# key: Dy
+# --
+* `(format-time-string "%Y")`年
+** `(format-time-string "%m")`月
+*** `(format-time-string "%w")`周

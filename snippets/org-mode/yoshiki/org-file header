@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+# name: yoshiki/org-file header
+# key: yhead
+# --
+#+title:     ${1:untitled title}
+#+author:    ${2:`user-full-name`}
+#+email:     ${3:`user-mail-address`}
+#+update:    `(format-time-string "[%Y-%m-%d %a %H:%M]")`
