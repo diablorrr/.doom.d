@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+# name: 概念
+# uuid:
+# key: <gn
+# condition: t
+# --
+* 概念
+- 简介 :: $0

@@ -35,10 +35,11 @@
 ;; There are two ways to load a theme. Both assume the theme is installed and
 ;; available. You can either set `doom-theme' or manually load a theme with the
 ;; `load-theme' function. This is the default:
-;;(setq doom-theme 'doom-one)
+
 ;;启动主题设置
-;;(setq doom-theme 'adwaita)
-(setq doom-theme 'doom-dracula)
+;;(setq doom-theme 'doom-one)
+;;(setq doom-theme 'doom-dracula)
+(setq doom-theme 'doom-one-light)
 ;; This determines the style of line numbers in effect. If set to `nil', line
 ;; numbers are disabled. For relative line numbers, set this to `relative'.
 (setq display-line-numbers-type t)
@@ -65,9 +66,6 @@
       "C-c C-r" #'org-roam-refile
       "C-c i i" #'yoshiki/org-insert-artist-drawing)
 
-;;粘贴图片
-(map! :after org-download
-      "C-M-y" #'org-download-clipboard)
 
 ;;org noter的笔记buffer中滚动pdf的buffer
 (defun yoshiki/scroll-other-window ()
@@ -95,7 +93,14 @@
 
 ;;加载ox-freemind
 (after! org
- (require 'ox-freemind))
+ (require 'ox-freemind)
+ (require 'org-download))
+
+;;org-download配置
+(after! org-download
+  (map!
+   :map org-mode-map
+   "C-M-y" #'org-download-clipboard))
 
 ;;debug时用的
 ;; (add-variable-watcher 'org-agenda-files
@@ -360,21 +365,21 @@
 
 
 ;;保存org文件时，自动更新修改时间
-(defun yoshiki/org-update-last-modified ()
-  "Update the LAST_MODIFIED property in the Org file."
-  (when (derived-mode-p 'org-mode)
-    (save-excursion
-      (goto-char (point-min))
-      (if (re-search-forward "^#\\+LAST_MODIFIED:.*$" nil t)
-          (replace-match (concat "#+LAST_MODIFIED: " (format-time-string "%Y-%m-%d %H:%M:%S")))
-        (goto-char (point-min))
-        (if (re-search-forward "^#\\+TITLE:.*$" nil t)
-            (progn
-              (end-of-line)
-              (insert (concat "\n#+LAST_MODIFIED: " (format-time-string "%Y-%m-%d %H:%M:%S") "\n")))
-          (insert (concat "#+TITLE: Untitled\n#+LAST_MODIFIED: " (format-time-string "%Y-%m-%d %H:%M:%S") "\n")))))))
+;; (defun yoshiki/org-update-last-modified ()
+;;   "Update the LAST_MODIFIED property in the Org file."
+;;   (when (derived-mode-p 'org-mode)
+;;     (save-excursion
+;;       (goto-char (point-min))
+;;       (if (re-search-forward "^#\\+LAST_MODIFIED:.*$" nil t)
+;;           (replace-match (concat "#+LAST_MODIFIED: " (format-time-string "%Y-%m-%d %H:%M:%S")))
+;;         (goto-char (point-min))
+;;         (if (re-search-forward "^#\\+TITLE:.*$" nil t)
+;;             (progn
+;;               (end-of-line)
+;;               (insert (concat "\n#+LAST_MODIFIED: " (format-time-string "%Y-%m-%d %H:%M:%S") "\n")))
+;;           (insert (concat "#+TITLE: Untitled\n#+LAST_MODIFIED: " (format-time-string "%Y-%m-%d %H:%M:%S") "\n")))))))
 
-(add-hook 'before-save-hook 'yoshiki/org-update-last-modified)
+;; (add-hook 'before-save-hook 'yoshiki/org-update-last-modified)
 
 ;;设置pdf-tools高亮快捷键
 (map! :after pdf-tools
@@ -389,3 +394,8 @@
 (map! "C-t" #'transpose-frame)
 
 
+
+(setq-default  tab-width 4) ;; 表示一个 tab 4个字符宽
+(setq-default indent-tabs-mode nil) ;; nil 表示将 tab 替换成空格
+
+(add-to-list 'auto-mode-alist '("\\.fd\\'" . fundamental-mode))
