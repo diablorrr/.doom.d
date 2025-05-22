@@ -1,8 +1,0 @@
-# -*- mode: snippet -*-
-# name: yoshiki/org-noter-page
-# key: onp
-# --
-:PROPERTIES:
-:NOTER_PAGE: ${1:type}
-:END:
-$0
