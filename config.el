@@ -38,9 +38,9 @@
 ;; `load-theme' function. This is the default:
 
 ;;(setq doom-theme 'doom-one)
-;;(setq doom-theme 'doom-dracula)
+(setq doom-theme 'doom-dracula)
 ;;(setq doom-theme 'doom-one-light)
-(setq doom-theme 'doom-city-lights)
+;;(setq doom-theme 'doom-city-lights)
 
 ;; This determines the style of line numbers in effect. If set to `nil', line
 ;; numbers are disabled. For relative line numbers, set this to `relative'.
@@ -54,27 +54,36 @@
   (add-to-list 'auto-mode-alist '("\\.h\\'" . cpp-mode))        ;; 进入.h的时候进入cpp-mode
   (add-to-list 'initial-frame-alist '(fullscreen . maximized))  ;; emacs开启时，自动最大化，开启自动换行
   (setq display-line-numbers-type t)
-  :bind(("C-c f j" . 'open-proj)                                ;; 打开项目
+  :bind(
+        :map doom-leader-map
+        ("f j" . 'open-proj)                                ;; 打开项目
+        )
+  :bind
         ("C-M-y" . 'duplicate-line)                             ;; 复制粘贴当前行 x N
         ("C-=" . #'doom/increase-font-size)                     ;; 字体放大缩小
         ("C--" .  #'doom/decrease-font-size)
         ("M-]" . #'doom/window-enlargen)                        ;; 窗口调整
         ("M-[" . #'balance-windows)
         ("<mouse-8>" . #'better-jumper-jump-backward)           ;;设置鼠标返回
-        ("M-." . #'+lookup/definition)
-        ("M-/" . #'+lookup/references)
-        ))
+        ("M-." . #'+lookup/definition)                          ;; 查找定义
+        ("M-/" . #'+lookup/references)                          ;; 查找引用
+  )
 
 ;; If you use `org' and don't want your org files in the default location below,
 ;; change `org-directory'. It must be set before org loads!
 
 (use-package! org
-  :defer t
   :init
   (setq org-directory "/home/yoshiki01/.org/")
   (defun open-org-dir ()
     (interactive)
     (find-file (read-file-name "Open file or directory: " "/home/yoshiki01/.org/")))
+  :bind(:map doom-leader-map
+        ("f o" . 'open-org-dir)
+        ("M-w" . '+org/refile-to-file)
+        ("C-w" . 'org-refile)
+        ("C-r" . 'org-roam-refile))
+  :config
   (defun org-summary-todo (n-done n-not-done)
     "Switch entry to DONE when all subentries are done, to TODO otherwise."
     (let (org-log-done org-todo-log-states)
@@ -90,15 +99,12 @@
   (add-hook 'org-after-todo-statistics-hook #'org-summary-todo)                  ;; 当子任务全部DONE时，父任务自动转变为DONE
   (add-hook 'org-after-todo-state-change-hook #'yoshiki/org-clock-in-when-strt)  ;; 当TODO状态变成STRT时，如果不存在计时器，则开始计时
   (add-hook 'org-after-todo-state-change-hook #'yoshiki/org-clock-out-when-todo) ;; 当其他状态转变为TODO时，检查是否存在计时器，存在就关闭
-  :bind(("C-c f o" . 'open-org-dir)
-        :map org-mode-map
-        ("C-c M-w" . '+org/refile-to-file)
-        ("C-c C-w" . 'org-refile)
-        ("C-c C-r" . 'org-roam-refile))
-  :config
   (setq! tab-width 8)
   (require 'ox-freemind)
-  (require 'org-download)
+  ;;(require 'org-download)
+  :bind (:map org-mode-map
+              ("C-M-v" . 'yoshiki/scroll-other-window)
+              ("C-M-S-v" . 'yoshiki/scroll-other-window-down))
   )
 
 
@@ -110,7 +116,7 @@
 
 
 (use-package! org-noter
-  :defer t
+  :after org
   :config
   (defun yoshiki/scroll-other-window () ;; org-noter中在笔记区域滚动pdf区域
     (interactive)
@@ -130,10 +136,7 @@
               (pdf-view-previous-line-or-previous-page 2)
               (other-window 1)))
         (scroll-other-window-down 2))))
-  :bind (:map org-mode-map
-              ("C-M-v" . 'yoshiki/scroll-other-window)
-              ("C-M-S-v" . 'yoshiki/scroll-other-window-down))
-  )
+)
 
 
 
@@ -179,26 +182,20 @@
 
 (use-package! consult
   :bind
-  ("C-s" . 'consult-line)     ; buffer搜索增强
-  ("C-x b" . 'consult-buffer) ; 切换buffer                        ;
-  )
-
-
-
-(use-package! dired
-  :bind
-  (:map dired-mode-map
-        ("b" . 'dired-up-directory)))
+  ("C-s" . #'consult-line))
 
 
 
 (use-package! magit
+  :commands
+  (magit-status)
   :init
   (defun open-git-dir ()
         (interactive)
         (find-file (read-file-name "Open file or directory: " "/home/yoshiki01/git/")))
-  :bind
-  ("C-c f g" . #'open-git-dir))
+  :bind (:map doom-leader-map
+              ("f g" . #'open-git-dir)))
+
 
 
 
@@ -209,34 +206,40 @@
       (erase-buffer)
       (insert (+workspace--tabline))))
   (run-with-idle-timer 1 t #'display-workspaces-in-minibuffer)
-  (+workspace/display))
+  (+workspace/display)
+  :bind (:map doom-leader-map
+              ("w 1" . #'+workspace/switch-to-0)
+              ("w 2" . #'+workspace/switch-to-1)
+              ("w 3" . #'+workspace/switch-to-2)
+              ("w 4" . #'+workspace/switch-to-3)
+              ("w 5" . #'+workspace/switch-to-4)
+              ("w w" . #'+workspace/switch-to)
+              ("w d" . #'+workspace/kill)
+              ))
 
-
-
-(use-package! treemacs
-  :bind
-  ("C-c w e" . #'treemacs-select-window)
-  )
 
 
 
 (use-package! projectile
-  :bind (:map projectile-mode-map
-         ("C-c p a" . #'projectile-add-known-project)
-         ("C-c p r" . #'projectile-remove-known-project)))
+  :defer t
+  :config
+  (setq! projectile-project-root-files '("requirements.txt" "setup.py" "CMakeLists.txt") )
+  (message "projectile ok")
+)
 
 
 
 (use-package! avy
+  :defer t
   :bind
-  ("C-r" . #'avy-goto-word-0)
-  ("C-x j" . #'avy-goto-line)
+  :config
   )
 
 
 
 ;; TODO imenu-list显示在底部
 (use-package! imenu-list
+  :defer t
   :init
   (defvar my-toggle-state t)
   (defun yoshiki/my-toggle-show-hide ()
@@ -258,26 +261,19 @@
   :config
   (setq! imenu-list-auto-resize t)
   (setq! imenu-list-position 'right)
+  (message "imenu-list ok")
   :bind
-  (("C-c o i" . #'imenu-list)
-   :map imenu-list-major-mode-map
-   ("u" . #'yoshiki/my-toggle-show-hide)))
-
-
-
-(use-package! lsp-ui
-  :defer t
-  :bind (:map lsp-ui-mode-map
-              ("C-o" . #'lsp-ui-doc-toggle)
-              ;;([remap xref-find-definitions] . lsp-ui-peek-find-definitions)
-              ;;("M-/" . #'lsp-ui-peek-find-references)
-              ))
+  (:map doom-leader-map
+   ("o i" . #'imenu-list))
+  :bind
+  (:map imenu-list-major-mode-map
+   ("o" . #'yoshiki/my-toggle-show-hide))
 
 
 
 (use-package! transpose-frame
   :bind
-  ("C-t" . #'transpose-frame))
+("C-x f" . #'transpose-frame))
 
 
 
@@ -288,6 +284,30 @@
 
 
 
+(use-package! vertico-posframe
+  :defer t
+  :init
+  (setq! vertico-posframe-border-width 8)
+  (setq! vertico-posframe-parameters
+         '((left-fringe . 8)
+           (right-fringe . 8))))
+
+
+
+(use-package! dape
+  :defer t
+)
+
+
+
+(use-package! corfu
+  :init
+  (global-corfu-mode)
+  (corfu-popupinfo-mode)
+  (corfu-history-mode)
+  )
 ;;-------------------------------------------------------------------------------------------------------------------
 (setq-default tab-width 4) ;; 表示一个 tab 4个字符宽
 (setq-default indent-tabs-mode nil) ;; nil 表示将 tab 替换成空格
+
+

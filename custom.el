@@ -5,7 +5,6 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(c-basic-offset 4)
- '(c-default-style '((java-mode . "java") (awk-mode . "awk") (other . "doom")))
  '(corfu-auto t)
  '(custom-safe-themes
    '("7f6bcac0505fb3468fcf436e1274dc538b789f642478320a5f95bfc07d8f10a1"
@@ -43,7 +42,6 @@
  '(flycheck-idle-change-delay 1.0)
  '(flycheck-indication-mode 'right-fringe)
  '(flycheck-popup-tip-error-prefix "[!] ")
- '(global-flycheck-mode t)
  '(lsp-clients-clangd-args '("-j=4" "-j=4" "-j=4" "--header-insertion-decorators=0"))
  '(lsp-completion-provider :none)
  '(lsp-ui-doc-show-with-mouse t)
@@ -137,40 +135,6 @@
  '(tab-width 2)
  '(which-key-use-C-h-commands t)
  '(word-wrap nil))
-;; NOTE myTheme的自定义face
-;; (custom-set-faces
-;;  ;; custom-set-faces was added by Custom.
-;;  ;; If you edit it by hand, you could mess it up, so be careful.
-;;  ;; Your init file should contain only one such instance.
-;;  ;; If there is more than one, they won't work right.
-;;  '(default ((t (:inherit nil :extend nil :stipple nil :background "#EDEDED" :foreground "#2E3436" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight regular :height 126 :width normal :foundry "ADBO" :family "Source Code Pro"))))
-;;  '(+org-todo-active ((t (:foreground "lime green"))))
-;;  '(+org-todo-cancel ((t (:foreground "black"))))
-;;  '(+org-todo-onhold ((t (:foreground "dark orange"))))
-;;  '(+org-todo-project ((t (:foreground "deep sky blue"))))
-;;  '(bold ((t (:foreground "black" :weight bold))))
-;;  '(cursor ((t (:background "black"))))
-;;  '(doom-modeline-buffer-file ((t (:foreground "gold" :weight bold))))
-;;  '(doom-modeline-buffer-path ((t (:foreground "gold"))))
-;;  '(error ((t (:foreground "red" :weight bold))))
-;;  '(highlight ((t (:background "gold" :foreground "black"))))
-;;  '(italic ((t (:slant italic))))
-;;  '(line-number ((t (:foreground "black" :weight bold))))
-;;  '(lsp-ui-doc ((t (:height 1.0 :family "Courier New"))))
-;;  '(lsp-ui-doc-background ((t (:background "white"))))
-;;  '(magit-section-highlight ((t (:extend t :background "dark orange"))))
-;;  '(mode-line ((t (:background "black" :foreground "white" :box (:line-width (1 . -1) :style released-button)))))
-;;  '(org-agenda-dimmed-todo-face ((t nil)))
-;;  '(org-agenda-done ((t (:foreground "RosyBrown" :weight bold))))
-;;  '(org-done ((t (:foreground "RosyBrown" :weight bold))))
-;;  '(org-inline-src-block ((t (:inherit org-block))))
-;;  '(org-list-dt ((t (:foreground "orange red" :weight bold))))
-;;  '(org-table ((t (:foreground "Blue1"))))
-;;  '(org-todo ((t (:foreground "deep pink" :weight bold))))
-;;  '(org-upcoming-deadline ((t (:foreground "red" :weight bold))))
-;;  '(org-upcoming-distant-deadline ((t (:foreground "red" :weight bold))))
-;;  '(org-warning ((t (:foreground "red" :weight bold))))
-;;  '(shadow ((t (:foreground "gray30")))))
 ;; NOTE yoshikiDark的自定义face
 (custom-set-faces
  ;; custom-set-faces was added by Custom.

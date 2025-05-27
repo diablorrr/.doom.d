@@ -49,18 +49,7 @@
 ;; ...Or *all* packages (NOT RECOMMENDED; will likely break things)
 ;; (unpin! t)
 
-;;大纲
-(package! imenu-list)
-;;调整buffer位置，如上下调整为左右
-(package! transpose-frame)
 
+(package! imenu-list)      ;; 大纲
 
-;; (when (package! lsp-bridge
-;;         :recipe (:host github
-;;                  :repo "manateelazycat/lsp-bridge"
-;;                  :branch "master"
-;;                  :files ("*.el" "*.py" "acm" "core" "langserver" "multiserver" "resources")
-;;                  ;; do not perform byte compilation or native compilation for lsp-bridge
-;;                  :build (:not compile)))
-;;   (package! markdown-mode)
-;;   (package! yasnippet))
+(package! transpose-frame) ;; 调整buffer位置，如上下调整为左右
