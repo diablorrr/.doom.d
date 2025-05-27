@@ -50,11 +50,15 @@
   (defun open-proj ()
     (interactive)
     (find-file (read-file-name "open proj: " "/home/yoshiki01/.proj/")))
+  (defun open-git-dir ()
+        (interactive)
+        (find-file (read-file-name "Open file or directory: " "/home/yoshiki01/git/")))
   :config
   (add-to-list 'auto-mode-alist '("\\.h\\'" . cpp-mode))        ;; 进入.h的时候进入cpp-mode
   (add-to-list 'initial-frame-alist '(fullscreen . maximized))  ;; emacs开启时，自动最大化，开启自动换行
   (setq display-line-numbers-type t)
   :bind(("C-c f j" . 'open-proj)                                ;; 打开项目
+        ("C-c f g" . #'open-git-dir)                            ;; 打开git目录
         ("C-M-y" . 'duplicate-line)                             ;; 复制粘贴当前行 x N
         ("C-=" . #'doom/increase-font-size)                     ;; 字体放大缩小
         ("C--" .  #'doom/decrease-font-size)
@@ -98,7 +102,6 @@
   :config
   (setq! tab-width 8)
   (require 'ox-freemind)
-  (require 'org-download)
   )
 
 
@@ -110,7 +113,7 @@
 
 
 (use-package! org-noter
-  :defer t
+  :after org
   :config
   (defun yoshiki/scroll-other-window () ;; org-noter中在笔记区域滚动pdf区域
     (interactive)
@@ -196,13 +199,15 @@
 
 
 
-(use-package! magit
-  :init
-  (defun open-git-dir ()
-        (interactive)
-        (find-file (read-file-name "Open file or directory: " "/home/yoshiki01/git/")))
+(use-package! dirvish
   :bind
-  ("C-c f g" . #'open-git-dir))
+  ("C-x C-j" . 'dirvish))
+
+
+
+(use-package! magit
+  :commands
+  (magit-status))
 
 
 
@@ -220,7 +225,10 @@
 (use-package! projectile
   :bind (:map projectile-mode-map
          ("C-c p a" . #'projectile-add-known-project)
-         ("C-c p r" . #'projectile-remove-known-project)))
+         ("C-c p r" . #'projectile-remove-known-project))
+  :config
+  (setq! projectile-project-root-files '("requirements.txt" "setup.py" "CMakeLists.txt"))
+  )
 
 
 
@@ -262,16 +270,6 @@
 
 
 
-(use-package! lsp-ui
-  :defer t
-  :bind (:map lsp-ui-mode-map
-              ("C-o" . #'lsp-ui-doc-toggle)
-              ;;([remap xref-find-definitions] . lsp-ui-peek-find-definitions)
-              ;;("M-/" . #'lsp-ui-peek-find-references)
-              ))
-
-
-
 (use-package! transpose-frame
   :bind
   ("C-t" . #'transpose-frame))
@@ -284,6 +282,30 @@
   (setq c-default-style '((java-mode . "java") (awk-mode . "awk") (other . "gnu"))))
 
 
+
+
+(use-package! vertico-posframe
+  :defer t
+  :init
+  (setq! vertico-posframe-border-width 8)
+  (setq! vertico-posframe-parameters
+         '((left-fringe . 8)
+           (right-fringe . 8))))
+
+
+
+(use-package! dape
+  :defer t
+)
+
+
+
+(use-package! corfu
+  :init
+  (global-corfu-mode)
+  (corfu-popupinfo-mode)
+  (corfu-history-mode)
+  )
 
 ;;-------------------------------------------------------------------------------------------------------------------
 (setq-default tab-width 4) ;; 表示一个 tab 4个字符宽
