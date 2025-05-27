@@ -188,7 +188,11 @@
 (use-package! dired
   :bind
   (:map dired-mode-map
-        ("b" . 'dired-up-directory)))
+        ("h" . 'dired-up-directory)
+        ("l" . 'dired-find-file)
+        ("j" . 'dired-next-line)
+        ("k" . 'dired-previous-line)
+        ))
 
 
 
@@ -210,13 +214,6 @@
       (insert (+workspace--tabline))))
   (run-with-idle-timer 1 t #'display-workspaces-in-minibuffer)
   (+workspace/display))
-
-
-
-(use-package! treemacs
-  :bind
-  ("C-c w e" . #'treemacs-select-window)
-  )
 
 
 
